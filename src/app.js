@@ -28,13 +28,18 @@ app.post('/tweets', (req, res) => {
 
     let newTweet = {
         username: req.body.username,
-        tweet: req.body.tweet
+        tweet: req.body.tweet,
+        avatar: usernameExist.avatar
     }
     tweets.push(newTweet);
     return res.send('OK')
 })
 
 //GET Tweets
+app.get('/tweets', (req, res) => {
+    const lastTweets = tweets.slice(-10)
+    return res.send(lastTweets)
+})
 
 //Porta
 const PORT = 5000
