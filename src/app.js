@@ -16,10 +16,23 @@ app.post('/signup', (req, res) => {
     }
     users.push(newUser);
     console.log(users)
-    res.send('Ok')
+    res.send('OK')
 })
 
 //POST Tweets
+app.post('/tweets', (req, res) => {
+    const usernameExist = users.find((a) => a.username === req.body.username)
+    if (usernameExist === undefined) {
+        return res.send('UNAUTHORIZED')
+    }
+
+    let newTweet = {
+        username: req.body.username,
+        tweet: req.body.tweet
+    }
+    tweets.push(newTweet);
+    return res.send('OK')
+})
 
 //GET Tweets
 
