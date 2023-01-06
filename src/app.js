@@ -15,15 +15,18 @@ app.post('/signup', (req, res) => {
         avatar: req.body.avatar
     }
     users.push(newUser);
-    console.log(users)
-    res.send('OK')
+    //validação
+    if (!req.body.username || !req.body.avatar) {
+        return res.status(400).send('Todos os campos são obrigatórios!”')
+    }
+    res.status(201).send('OK')
 })
 
 //POST Tweets
 app.post('/tweets', (req, res) => {
     const usernameExist = users.find((a) => a.username === req.body.username)
     if (usernameExist === undefined) {
-        return res.send('UNAUTHORIZED')
+        return res.status(401).send('UNAUTHORIZED');
     }
 
     let newTweet = {
@@ -31,8 +34,13 @@ app.post('/tweets', (req, res) => {
         tweet: req.body.tweet,
         avatar: usernameExist.avatar
     }
+    //validação
+    if (!req.body.username || !req.body.tweet) {
+        return res.status(400).send('Todos os campos são obrigatórios!”')
+    }
+
     tweets.push(newTweet);
-    return res.send('OK')
+    return res.status(201).send('OK');
 })
 
 //GET Tweets
@@ -40,7 +48,20 @@ app.get('/tweets', (req, res) => {
     const lastTweets = tweets.slice(-10)
     return res.send(lastTweets)
 })
+app.get('/tweets/:username', (req, res) => {
+    let filterTweet = tweets.filter((a) => a.username === req.params.username);
+    let tweetsUser = []
 
+    for (let i = 0; i < filterTweet.length; i++) {
+        tweetsUser.push({
+            username: filterTweet[i].username,
+            avatar: filterTweet[i].avatar,
+            tweet: filterTweet[i].tweet
+        })
+    }
+    console.log(tweetsUser)
+    res.send('ok')
+})
 //Porta
 const PORT = 5000
 app.listen(PORT, () => {
