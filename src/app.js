@@ -9,16 +9,16 @@ let tweets = [];
 let users = [];
 
 //POST Sign-up
-app.post('/signup', (req, res) => {
+app.post('/sign-up', (req, res) => {
     const { username, avatar } = req.body;
+    if (!username || !avatar) {
+        return res.status(400).send('Todos os campos são obrigatórios!')
+    }
     let newUser = {
         username: username,
         avatar: avatar
     }
     users.push(newUser);
-    if (!username || !avatar) {
-        return res.status(400).send('Todos os campos são obrigatórios!”')
-    }
     res.status(201).send('OK')
 })
 
@@ -52,16 +52,15 @@ app.get('/tweets', (req, res) => {
 app.get('/tweets/:username', (req, res) => {
     let filterTweet = tweets.filter((a) => a.username === req.params.username);
     let tweetsUser = []
-
+    if (filterTweet.length === 0) {
+        return res.status(404).send('O usuário não existe')
+    }
     for (let i = 0; i < filterTweet.length; i++) {
         tweetsUser.push({
             username: filterTweet[i].username,
             avatar: filterTweet[i].avatar,
             tweet: filterTweet[i].tweet
         })
-    }
-    if (filterTweet.length === 0) {
-        return res.status(404).send('O usuário não existe')
     }
     res.status(200).send(filterTweet)
 })
